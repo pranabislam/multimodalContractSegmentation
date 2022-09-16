@@ -1,0 +1,2 @@
+# multimodalContractSegmentation
+Multimodal Contract Segmentation Research Project
