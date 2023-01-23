@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import re, os, json, statistics
-
+import toc_labelling
 
 def extract_td(cell):
     text = ''
@@ -13,7 +13,6 @@ def extract_td(cell):
     return text.strip()
 
 def clean(table_list):
-    print(table_list)
     try:
         num_cols = statistics.mode([len(x) for x in table_list])
     except statistics.StatisticsError as e:
@@ -34,18 +33,10 @@ def parse_html(soup):
                     row_holder.append(text)
             if row_holder:
                 table_holder.append(row_holder)
-        #     columns = row.find_all('td')
-        #     print(columns)
-        # for row in table.find_all('td'):
-        #     print(row.p.text)
     if table_holder:
         table_holder = clean(table_holder)
     return table_holder
     
-    # if 'table of contents' not in html_text.lower():
-    #     print('Failed')
-    #     return
-    # html_text = html_text.lower().split('table of contents')[1:]
     
 def filter_contents(s):
     multi_page_join_distance = 5000
@@ -64,7 +55,7 @@ def filter_contents(s):
     return remaining[:multi_page_join_distance]
  
 def main():
-    html_file_folder = '''/content/drive/MyDrive/Master's DS/Capstone/project/multimodalContractSegmentation/cuad_htmls/'''
+    html_file_folder = '''/Users/shaan/My Drive/Master's DS/Capstone/project/multimodalContractSegmentation/cuad_htmls'''
     html_files = [x for x in os.listdir(html_file_folder) if x.endswith('.html')]
     data = {}
     for file in html_files:
@@ -77,11 +68,10 @@ def main():
         data[file] = table
         if not table:
             print(file)
-    # with open("scraping_results.json", "w") as outfile:
-    #     json.dump(data, outfile)
-    
+   
+    data = toc_labelling.extract_labels_to_folder(data)
     print(data)
-    print(len(html_files), len(data))    
+   
     
 if __name__ == "__main__":
    main()
