@@ -82,7 +82,8 @@ def extract_label_to_json(toc_extracted, output_dir):
       # Is an actual subsection
       else:
         # print(n_section, n_subsection, is_subsection.group(), item, contract_title)
-        label_dict[n_section-1][1][n_subsection] = (f'{is_subsection.group()} {item[1:]}', {})
+        concat_items = ' '.join(item[1:])
+        label_dict[n_section-1][1][n_subsection] = (f'{is_subsection.group()} {concat_items}', {})
         
       n_subsection += 1
 
@@ -113,6 +114,8 @@ def extract_labels_to_folder(dict_of_tocs, output_dir):
       os.makedirs(output_dir)
     out = extract_label_to_json(item, output_dir)
     agg_label_dict[out[0]] = out[1]
+    with open('./TOC_Labels_full', 'w') as f:
+      json.dump(agg_label_dict, f)
 
 
 
